@@ -1,1 +1,159 @@
 <h1>Matchmaker</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>True Love Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>True Love Calculator</h1>
+    <p>Answer the following questions to find out your compatibility!</p>
+    
+    <form id="loveForm">
+      <div class="question">
+        <label for="q1">1. Broccoli is delicious.</label>
+        <input type="number" id="q1" name="q1" min="1" max="5" required>
+      </div>
+      
+      <!-- Repeat similar blocks for the other questions -->
+      
+      <button type="submit">Find out!</button>
+    </form>
+    
+    <div id="result" class="hidden">
+      <h2>Your Compatibility Results</h2>
+      <p id="compatibility-score"></p>
+      <p id="remark"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.question {
+  margin: 20px 0;
+}
+
+label {
+  font-size: 18px;
+}
+
+input[type="number"] {
+  width: 50px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+.hidden {
+  display: none;
+}
+// Constants for desired answers and threshold
+const desiredAnswers = [1, 3, 2, 5, 4]; // Adjust as needed for your "true love" answers
+const TRUE_LOVE_THRESHOLD = 80;
+const FRIEND_THRESHOLD = 60;
+
+document.getElementById('loveForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  // Get user answers
+  const userAnswers = [
+    Number(document.getElementById('q1').value),
+    Number(document.getElementById('q2').value),
+    Number(document.getElementById('q3').value),
+    Number(document.getElementById('q4').value),
+    Number(document.getElementById('q5').value)
+  ];
+
+  let totalCompatibility = 100;
+
+  // Calculate compatibility
+  for (let i = 0; i < userAnswers.length; i++) {
+    const scoreDifference = Math.abs(userAnswers[i] - desiredAnswers[i]);
+    totalCompatibility -= scoreDifference * 5; // Adjust weighting as needed
+  }
+
+  // Display results
+  document.getElementById('result').classList.remove('hidden');
+  document.getElementById('compatibility-score').textContent = `Your Compatibility Score is: ${totalCompatibility}%`;
+
+  // Display remark based on thresholds
+  let remark = '';
+  if (totalCompatibility >= TRUE_LOVE_THRESHOLD) {
+    remark = 'You are a perfect match! 💕';
+  } else if (totalCompatibility >= FRIEND_THRESHOLD) {
+    remark = 'You might be good friends! 🤝';
+  } else {
+    remark = 'Better run away! 🏃‍♀️';
+  }
+  document.getElementById('remark').textContent = remark;
+});
+function validate(input) {
+  if (input < 1 || input > 5 || isNaN(input)) {
+    alert('Please enter a number between 1 and 5 for all questions.');
+    return false;
+  }
+  return true;
+}
+
+// Call validate function before calculating score in the submit handler
+document.getElementById('loveForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const answers = [
+    document.getElementById('q1').value,
+    document.getElementById('q2').value,
+    document.getElementById('q3').value,
+    document.getElementById('q4').value,
+    document.getElementById('q5').value,
+  ];
+
+  // Validate all answers
+  for (const answer of answers) {
+    if (!validate(Number(answer))) return;
+  }
+
+  // Rest of the logic goes here
+});
